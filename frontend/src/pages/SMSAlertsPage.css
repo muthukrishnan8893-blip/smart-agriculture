@@ -1,0 +1,224 @@
+/* pages/SMSAlertsPage.css */
+.sms-page { display: flex; flex-direction: column; gap: 1.4rem; padding: 2rem; }
+
+/* ── Stats Cards ─────────────────────────────────────────── */
+.sms-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+  gap: 0.9rem;
+}
+.sms-stat-card {
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--card-border, rgba(0,0,0,0.07));
+  border-radius: var(--radius-lg, 18px);
+  padding: 1.2rem;
+  text-align: center;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.sms-stat-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+.sms-stat-icon { font-size: 1.8rem; margin-bottom: 0.3rem; }
+.sms-stat-value { font-size: 1.6rem; font-weight: 800; color: var(--text-primary, #1a1a1a); }
+.sms-stat-label { font-size: 0.78rem; color: var(--text-muted, #888); margin-top: 0.15rem; }
+
+/* ── Phone Input Section ─────────────────────────────────── */
+.sms-phone-section {
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--card-border, rgba(0,0,0,0.07));
+  border-radius: var(--radius-lg, 18px);
+  padding: 1.5rem;
+}
+.sms-phone-section h3 { margin: 0 0 0.8rem 0; font-size: 1rem; }
+.sms-phone-row {
+  display: flex; gap: 0.7rem; align-items: stretch; flex-wrap: wrap;
+}
+.sms-phone-row input {
+  flex: 1; min-width: 200px;
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius-md, 12px);
+  border: 1.5px solid var(--card-border, #ddd);
+  font-size: 0.95rem;
+  background: var(--input-bg, #fafafa);
+  color: var(--text-primary, #1a1a1a);
+}
+.sms-phone-row input:focus { outline: none; border-color: #1d6f42; }
+
+/* ── Buttons ─────────────────────────────────────────────── */
+.sms-btn {
+  padding: 0.65rem 1.3rem;
+  border-radius: var(--radius-md, 12px);
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.88rem;
+  transition: background 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+.sms-btn:hover { transform: translateY(-1px); }
+.sms-btn:active { transform: translateY(0); }
+.sms-btn-primary { background: #1d6f42; color: #fff; }
+.sms-btn-primary:hover { background: #166334; }
+.sms-btn-secondary { background: var(--card-bg, #f0f0f0); color: var(--text-primary, #333); border: 1.5px solid var(--card-border, #ddd); }
+.sms-btn-secondary:hover { background: var(--card-border, #e5e5e5); }
+.sms-btn-danger { background: #dc3545; color: #fff; }
+.sms-btn-danger:hover { background: #c82333; }
+.sms-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+/* ── Alert Type Grid ─────────────────────────────────────── */
+.sms-alert-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0.9rem;
+}
+.sms-alert-card {
+  background: var(--card-bg, #fff);
+  border: 2px solid var(--card-border, rgba(0,0,0,0.07));
+  border-radius: var(--radius-lg, 18px);
+  padding: 1.3rem;
+  display: flex; flex-direction: column; gap: 0.5rem;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  position: relative;
+}
+.sms-alert-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(29,111,66,0.1); }
+.sms-alert-card.active {
+  border-color: #1d6f42;
+  background: rgba(29, 111, 66, 0.04);
+  box-shadow: 0 4px 16px rgba(29,111,66,0.12);
+}
+.sms-alert-card-header { display: flex; align-items: center; gap: 0.6rem; }
+.sms-alert-card-icon { font-size: 1.6rem; }
+.sms-alert-card-title { font-weight: 700; font-size: 0.95rem; color: var(--text-primary, #1a1a1a); }
+.sms-alert-card-desc { font-size: 0.82rem; color: var(--text-muted, #888); line-height: 1.4; }
+.sms-alert-toggle {
+  position: absolute; top: 1rem; right: 1rem;
+  width: 42px; height: 24px;
+  border-radius: 12px;
+  background: #ccc;
+  border: none; cursor: pointer;
+  transition: background 0.2s;
+  padding: 0;
+}
+.sms-alert-toggle.on { background: #1d6f42; }
+.sms-alert-toggle::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.sms-alert-toggle.on::after { transform: translateX(18px); }
+
+/* ── Filters Section ─────────────────────────────────────── */
+.sms-filters {
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--card-border, rgba(0,0,0,0.07));
+  border-radius: var(--radius-lg, 18px);
+  padding: 1.5rem;
+}
+.sms-filters h3 { margin: 0 0 0.8rem 0; font-size: 1rem; }
+.sms-filter-row { display: flex; gap: 0.7rem; flex-wrap: wrap; }
+.sms-filter-row select {
+  flex: 1; min-width: 180px;
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius-md, 12px);
+  border: 1.5px solid var(--card-border, #ddd);
+  font-size: 0.9rem;
+  background: var(--input-bg, #fafafa);
+  color: var(--text-primary, #1a1a1a);
+}
+
+/* ── History Table ───────────────────────────────────────── */
+.sms-history {
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--card-border, rgba(0,0,0,0.07));
+  border-radius: var(--radius-lg, 18px);
+  padding: 1.5rem;
+  overflow-x: auto;
+}
+.sms-history h3 { margin: 0 0 1rem 0; font-size: 1rem; }
+.sms-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.sms-history-table th {
+  text-align: left;
+  padding: 0.7rem 0.9rem;
+  border-bottom: 2px solid var(--card-border, #eee);
+  font-weight: 700;
+  color: var(--text-muted, #666);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.sms-history-table td {
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--card-border, rgba(0,0,0,0.04));
+  color: var(--text-primary, #333);
+}
+.sms-history-table tr:hover td { background: rgba(29,111,66,0.03); }
+
+.sms-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.sms-badge.delivered { background: rgba(29,111,66,0.12); color: #1d6f42; }
+.sms-badge.failed { background: rgba(220,53,69,0.12); color: #dc3545; }
+.sms-badge.pending { background: rgba(255,193,7,0.15); color: #c49000; }
+
+.sms-message-preview {
+  max-width: 280px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Action Bar ──────────────────────────────────────────── */
+.sms-action-bar {
+  display: flex; gap: 0.7rem; flex-wrap: wrap; align-items: center;
+  justify-content: flex-end;
+}
+
+/* ── Success / Error Messages ────────────────────────────── */
+.sms-success {
+  background: rgba(29,111,66,0.08);
+  color: #1d6f42;
+  padding: 0.8rem 1.2rem;
+  border-radius: var(--radius-md, 12px);
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.sms-error {
+  background: rgba(220,53,69,0.08);
+  color: #dc3545;
+  padding: 0.8rem 1.2rem;
+  border-radius: var(--radius-md, 12px);
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+
+/* ── Empty state ─────────────────────────────────────────── */
+.sms-empty {
+  text-align: center;
+  padding: 2.5rem;
+  color: var(--text-muted, #999);
+  font-size: 0.92rem;
+}
+.sms-empty-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .sms-page { padding: 1rem; }
+  .sms-stats { grid-template-columns: repeat(2, 1fr); }
+  .sms-alert-grid { grid-template-columns: 1fr; }
+  .sms-phone-row { flex-direction: column; }
+}

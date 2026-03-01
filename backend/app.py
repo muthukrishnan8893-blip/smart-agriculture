@@ -39,6 +39,7 @@ def create_app(config_name='default'):
     from backend.routes.disease import disease_bp
     from backend.routes.schemes import schemes_bp
     from backend.routes.admin import admin_bp
+    from backend.routes.sms import sms_bp
 
     app.register_blueprint(auth_bp,       url_prefix='/api/auth')
     app.register_blueprint(weather_bp,    url_prefix='/api/weather')
@@ -47,6 +48,7 @@ def create_app(config_name='default'):
     app.register_blueprint(disease_bp,    url_prefix='/api/disease')
     app.register_blueprint(schemes_bp,    url_prefix='/api/schemes')
     app.register_blueprint(admin_bp,      url_prefix='/api/admin')
+    app.register_blueprint(sms_bp,        url_prefix='/api/sms')
 
     # ── Health check route ────────────────────────────────────
     @app.route('/api/health')

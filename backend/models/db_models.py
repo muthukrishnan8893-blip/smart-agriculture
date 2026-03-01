@@ -162,3 +162,61 @@ class PricePrediction(db.Model):
             'predicted_price': self.predicted_price,
             'prediction_date': self.prediction_date.isoformat() if self.prediction_date else None
         }
+
+
+class SMSAlert(db.Model):
+    """SMS notification alert subscriptions."""
+    __tablename__ = 'sms_alerts'
+
+    id            = db.Column(db.Integer, primary_key=True)
+    user_id       = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    alert_type    = db.Column(db.String(50), nullable=False)   # weather, price, disease, scheme, water, harvest
+    phone         = db.Column(db.String(15), nullable=False)
+    is_active     = db.Column(db.Boolean, default=True)
+    crop_filter   = db.Column(db.String(100))                  # optional crop filter
+    state_filter  = db.Column(db.String(100))                  # optional state filter
+    created_at    = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at    = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    user = db.relationship('User', backref=db.backref('sms_alerts', lazy=True))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'alert_type': self.alert_type,
+            'phone': self.phone,
+            'is_active': self.is_active,
+            'crop_filter': self.crop_filter,
+            'state_filter': self.state_filter,
+            'created_at': self.created_at.isoformat(),
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None,
+        }
+
+
+class SMSLog(db.Model):
+    """Log of sent SMS notifications."""
+    __tablename__ = 'sms_logs'
+
+    id          = db.Column(db.Integer, primary_key=True)
+    user_id     = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    phone       = db.Column(db.String(15), nullable=False)
+    alert_type  = db.Column(db.String(50), nullable=False)
+    message     = db.Column(db.Text, nullable=False)
+    status      = db.Column(db.String(20), default='pending')  # pending, delivered, failed
+    message_id  = db.Column(db.String(50))
+    sent_at     = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship('User', backref=db.backref('sms_logs', lazy=True))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'phone': self.phone,
+            'alert_type': self.alert_type,
+            'message': self.message,
+            'status': self.status,
+            'message_id': self.message_id,
+            'sent_at': self.sent_at.isoformat(),
+        }
