@@ -18,6 +18,7 @@ import ProfilePage        from './pages/ProfilePage';
 import CropCalendarPage    from './pages/CropCalendarPage';
 import NearbyMarketsPage  from './pages/NearbyMarketsPage';
 import SMSAlertsPage      from './pages/SMSAlertsPage';
+import PriceComparisonPage from './pages/PriceComparisonPage';
 
 // Layout
 import Sidebar from './components/Sidebar';
@@ -56,6 +57,7 @@ function AppLayout({ darkMode, setDarkMode }) {
           <Route path="/calendar"       element={<CropCalendarPage />} />
           <Route path="/nearby-markets"  element={<NearbyMarketsPage />} />
           <Route path="/sms-alerts"     element={<SMSAlertsPage />} />
+          <Route path="/price-compare" element={<PriceComparisonPage />} />
           <Route path="/admin"      element={<AdminRoute><AdminPage /></AdminRoute>} />
           <Route path="*"           element={<Navigate to="/dashboard" replace />} />
         </Routes>

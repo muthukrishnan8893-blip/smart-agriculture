@@ -16,6 +16,7 @@ const NAV_ITEMS = [
   { to: '/calendar',       icon: '📅', key: 'calendar' },
   { to: '/nearby-markets', icon: '🗺️', key: 'nearbyMarkets' },
   { to: '/sms-alerts',     icon: '📲', key: 'smsAlerts' },
+  { to: '/price-compare',  icon: '⚖️', key: 'priceCompare' },
 ];
 
 export default function Sidebar({ darkMode, setDarkMode }) {

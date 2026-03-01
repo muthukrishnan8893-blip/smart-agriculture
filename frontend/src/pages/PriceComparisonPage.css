@@ -1,0 +1,207 @@
+/* pages/PriceComparisonPage.css */
+.compare-page { display: flex; flex-direction: column; gap: 1.4rem; padding: 2rem; }
+
+/* ── Summary Cards ───────────────────────────────────────── */
+.compare-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.9rem;
+}
+.compare-summary-card {
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--card-border, rgba(0,0,0,0.07));
+  border-radius: var(--radius-lg, 18px);
+  padding: 1.2rem;
+  text-align: center;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.compare-summary-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+.compare-summary-card.best { border-color: #1d6f42; background: rgba(29,111,66,0.04); }
+.compare-summary-card.worst { border-color: #dc3545; background: rgba(220,53,69,0.04); }
+.compare-summary-card.gain { border-color: #f59e0b; background: rgba(245,158,11,0.04); }
+.compare-summary-icon { font-size: 1.7rem; margin-bottom: 0.2rem; }
+.compare-summary-value { font-size: 1.5rem; font-weight: 800; color: var(--text-primary, #1a1a1a); }
+.compare-summary-label { font-size: 0.78rem; color: var(--text-muted, #888); margin-top: 0.1rem; }
+
+/* ── Search / Filter Bar ─────────────────────────────────── */
+.compare-filters {
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--card-border, rgba(0,0,0,0.07));
+  border-radius: var(--radius-lg, 18px);
+  padding: 1.5rem;
+}
+.compare-filters h3 { margin: 0 0 0.8rem; font-size: 1rem; }
+.compare-filter-row {
+  display: flex; gap: 0.7rem; align-items: stretch; flex-wrap: wrap;
+}
+.compare-filter-row select, .compare-filter-row button {
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius-md, 12px);
+  border: 1.5px solid var(--card-border, #ddd);
+  font-size: 0.9rem;
+  background: var(--input-bg, #fafafa);
+  color: var(--text-primary, #1a1a1a);
+}
+.compare-filter-row select { flex: 1; min-width: 180px; }
+.compare-filter-row select:focus { outline: none; border-color: #1d6f42; }
+.compare-btn {
+  padding: 0.65rem 1.5rem;
+  border-radius: var(--radius-md, 12px);
+  border: none;
+  background: #1d6f42;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+.compare-btn:hover { background: #166334; transform: translateY(-1px); }
+.compare-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+/* ── GPS Button ──────────────────────────────────────────── */
+.compare-gps-btn {
+  padding: 0.65rem 1.2rem;
+  border-radius: var(--radius-md, 12px);
+  border: 1.5px solid var(--card-border, #ddd);
+  background: var(--card-bg, #fff);
+  color: var(--text-primary, #333);
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.compare-gps-btn:hover { background: var(--card-border, #eee); }
+
+/* ── Results Table ───────────────────────────────────────── */
+.compare-results {
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--card-border, rgba(0,0,0,0.07));
+  border-radius: var(--radius-lg, 18px);
+  padding: 1.5rem;
+  overflow-x: auto;
+}
+.compare-results h3 { margin: 0 0 1rem; font-size: 1rem; }
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.compare-table th {
+  text-align: left;
+  padding: 0.75rem 0.9rem;
+  border-bottom: 2px solid var(--card-border, #eee);
+  font-weight: 700;
+  color: var(--text-muted, #666);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.compare-table td {
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid var(--card-border, rgba(0,0,0,0.04));
+  color: var(--text-primary, #333);
+}
+.compare-table tr:hover td { background: rgba(29,111,66,0.03); }
+.compare-table .rank-col { width: 50px; text-align: center; }
+.compare-table .price-col { font-weight: 800; font-size: 0.95rem; }
+
+/* ── Rank Badge ──────────────────────────────────────────── */
+.rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  font-weight: 800;
+  font-size: 0.75rem;
+}
+.rank-badge.rank-1 { background: #ffd700; color: #6b5300; }
+.rank-badge.rank-2 { background: #c0c0c0; color: #444; }
+.rank-badge.rank-3 { background: #cd7f32; color: #fff; }
+.rank-badge.rank-other { background: var(--card-border, #eee); color: var(--text-muted, #888); }
+
+/* ── Tags ────────────────────────────────────────────────── */
+.compare-tag {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-left: 0.4rem;
+}
+.compare-tag.best { background: rgba(29,111,66,0.12); color: #1d6f42; }
+.compare-tag.worst { background: rgba(220,53,69,0.12); color: #dc3545; }
+
+/* ── Diff Indicator ──────────────────────────────────────── */
+.compare-diff { font-size: 0.78rem; font-weight: 600; }
+.compare-diff.positive { color: #1d6f42; }
+.compare-diff.negative { color: #dc3545; }
+.compare-diff.neutral { color: var(--text-muted, #999); }
+
+/* ── Source Badge ─────────────────────────────────────────── */
+.compare-source {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+.compare-source.live { background: rgba(29,111,66,0.12); color: #1d6f42; }
+.compare-source.typical { background: rgba(245,158,11,0.12); color: #b45309; }
+
+/* ── Maps Link ───────────────────────────────────────────── */
+.compare-maps-link {
+  color: #1d6f42;
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.compare-maps-link:hover { color: #14532d; text-decoration: underline; }
+
+/* ── Recommendation Card ─────────────────────────────────── */
+.compare-recommendation {
+  background: linear-gradient(135deg, #0f2418 0%, #1d6f42 55%, #25874f 100%);
+  color: #fff;
+  border-radius: var(--radius-xl, 22px);
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  box-shadow: 0 8px 32px rgba(29,111,66,0.3);
+  position: relative;
+  overflow: hidden;
+}
+.compare-recommendation::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+}
+.compare-rec-icon { font-size: 2.5rem; z-index: 1; }
+.compare-rec-content { flex: 1; z-index: 1; }
+.compare-rec-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.3rem; }
+.compare-rec-detail { font-size: 0.88rem; opacity: 0.9; line-height: 1.5; }
+.compare-rec-price { font-size: 1.8rem; font-weight: 800; z-index: 1; }
+
+/* ── Empty State ─────────────────────────────────────────── */
+.compare-empty {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-muted, #999);
+}
+.compare-empty-icon { font-size: 3.5rem; margin-bottom: 0.5rem; }
+.compare-empty-text { font-size: 0.95rem; }
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .compare-page { padding: 1rem; }
+  .compare-summary { grid-template-columns: repeat(2, 1fr); }
+  .compare-filter-row { flex-direction: column; }
+  .compare-recommendation { flex-direction: column; text-align: center; }
+}
