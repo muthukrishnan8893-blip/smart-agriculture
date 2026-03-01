@@ -1,0 +1,37 @@
+﻿/* pages/NearbyMarketsPage.css */
+.nearby-page { display: flex; flex-direction: column; gap: 1.2rem; height: calc(100vh - 7rem); }
+
+.nearby-controls { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
+.nearby-controls input, .nearby-controls select { flex: 1; min-width: 140px; }
+
+.nearby-layout { display: grid; grid-template-columns: 380px 1fr; gap: 1.2rem; flex: 1; min-height: 0; }
+@media (max-width: 900px) { .nearby-layout { grid-template-columns: 1fr; } }
+
+#nearby-map {
+  border-radius: var(--radius-xl, 22px);
+  border: 1px solid var(--card-border);
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  min-height: 420px;
+  z-index: 0;
+}
+
+.market-list-panel { display: flex; flex-direction: column; gap: 0.6rem; overflow-y: auto; padding-right: 2px; }
+.market-list-item {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg, 18px);
+  padding: 1rem 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-left: 4px solid transparent;
+}
+.market-list-item:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.09); border-left-color: var(--primary); }
+.market-list-item.selected { border-left-color: var(--primary); background: var(--bg2); }
+
+.mli-name { font-weight: 700; font-size: 0.92rem; }
+.mli-dist { font-size: 0.77rem; opacity: 0.55; margin-top: 2px; }
+.mli-crops { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 0.5rem; }
+.mli-crop-tag { background: var(--bg2); color: var(--primary); font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
+
+.market-list-item.selected .mli-crop-tag { background: rgba(29,111,66,0.15); }

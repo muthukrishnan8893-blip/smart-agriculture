@@ -1,0 +1,67 @@
+﻿/* pages/MarketPage.css */
+.market-page { display: flex; flex-direction: column; gap: 1.4rem; }
+
+.market-filters { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.market-filters select, .market-filters input { min-width: 160px; flex: 1; }
+
+.mandi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+.mandi-card {
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--card-border, rgba(0,0,0,0.07));
+  border-radius: var(--radius-xl, 22px);
+  padding: 1.3rem 1.4rem;
+  transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.mandi-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--primary-light, #25874f));
+}
+.mandi-card:hover { box-shadow: 0 8px 28px rgba(29,111,66,0.13); transform: translateY(-3px); border-color: rgba(29,111,66,0.18); }
+
+.mandi-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.9rem; }
+.mandi-name { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 1.05rem; letter-spacing: -0.02em; }
+.mandi-state { font-size: 0.75rem; opacity: 0.55; margin-top: 2px; }
+.mandi-badge {
+  background: var(--primary-glow, rgba(29,111,66,0.12));
+  color: var(--primary);
+  border-radius: 99px;
+  padding: 3px 10px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.price-table { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
+.price-table th {
+  background: var(--bg2, #e8f4ed);
+  color: var(--primary);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  padding: 7px 10px;
+  text-align: left;
+}
+.price-table th:first-child { border-radius: 8px 0 0 8px; }
+.price-table th:last-child  { border-radius: 0 8px 8px 0; }
+.price-table td { padding: 8px 10px; border-bottom: 1px solid var(--card-border, rgba(0,0,0,0.06)); }
+.price-table tr:last-child td { border-bottom: none; }
+.price-table tr:hover td { background: var(--bg2, #e8f4ed); }
+.price-high { color: var(--primary); font-weight: 700; }
+.price-low  { color: var(--danger, #dc2626); font-weight: 700; }
+
+.market-empty {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--text-muted, #64748b);
+  background: var(--card-bg);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--card-border);
+}
+.market-empty .empty-icon { font-size: 3rem; margin-bottom: 0.75rem; }
+.market-empty p { font-size: 0.9rem; }

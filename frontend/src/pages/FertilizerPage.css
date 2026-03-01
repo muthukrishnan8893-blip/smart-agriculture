@@ -1,0 +1,50 @@
+﻿/* pages/FertilizerPage.css */
+.fert-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.4rem;
+}
+@media (max-width: 768px) { .fert-layout { grid-template-columns: 1fr; } }
+
+.fert-form-card, .fert-result-card {
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--card-border, rgba(0,0,0,0.07));
+  border-radius: var(--radius-xl, 22px);
+  padding: 1.6rem 1.5rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+.fert-form-card h3, .fert-result-card h3 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 1.2rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--primary-glow, rgba(29,111,66,0.12));
+  color: var(--primary, #1d6f42);
+}
+.fert-form { display: flex; flex-direction: column; gap: 0.85rem; }
+
+.fert-result-banner {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light, #25874f) 100%);
+  color: #fff;
+  border-radius: var(--radius-lg, 18px);
+  padding: 1.3rem 1.5rem;
+  margin-bottom: 1.1rem;
+  box-shadow: 0 4px 16px rgba(29,111,66,0.3);
+}
+.fert-result-banner .rec-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.8; font-weight: 700; }
+.fert-result-banner .rec-name { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.9rem; font-weight: 800; margin-top: 0.2rem; letter-spacing: -0.03em; }
+
+.fert-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; }
+.fert-detail-item {
+  background: var(--bg2, #e8f4ed);
+  border-radius: var(--radius, 12px);
+  padding: 0.75rem 0.9rem;
+}
+.fert-detail-item .detail-label { font-size: 0.72rem; opacity: 0.6; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+.fert-detail-item .detail-val { font-size: 0.95rem; font-weight: 700; margin-top: 0.3rem; color: var(--primary); }
+
+.fert-tips { margin-top: 1rem; }
+.fert-tips h4 { font-size: 0.88rem; font-weight: 700; opacity: 0.7; margin-bottom: 0.5rem; }
+.fert-tips ul { margin: 0; padding-left: 1.3rem; }
+.fert-tips li { font-size: 0.85rem; opacity: 0.75; margin-bottom: 0.3rem; line-height: 1.5; }

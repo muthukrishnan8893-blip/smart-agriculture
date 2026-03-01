@@ -1,0 +1,55 @@
+﻿/* pages/AdminPage.css */
+.admin-page { display: flex; flex-direction: column; gap: 1.4rem; }
+
+.admin-tabs { display: flex; gap: 4px; background: var(--bg2); padding: 5px; border-radius: var(--radius-lg, 18px); border: 1px solid var(--card-border); width: fit-content; }
+.admin-tab {
+  padding: 7px 18px;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text);
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.admin-tab:hover { background: rgba(255,255,255,0.7); }
+.admin-tab.active { background: #fff; border-color: var(--card-border); box-shadow: 0 2px 8px rgba(0,0,0,0.07); color: var(--primary); font-weight: 700; }
+
+.admin-section {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-xl, 22px);
+  padding: 1.5rem;
+}
+.admin-section h3 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 1.1rem;
+  color: var(--primary);
+}
+
+.admin-table-wrap { overflow-x: auto; }
+.admin-table { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
+.admin-table thead th {
+  background: var(--bg2);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: var(--primary);
+  padding: 9px 12px;
+  text-align: left;
+}
+.admin-table thead th:first-child { border-radius: 8px 0 0 8px; }
+.admin-table thead th:last-child  { border-radius: 0 8px 8px 0; }
+.admin-table td { padding: 10px 12px; border-bottom: 1px solid var(--card-border); }
+.admin-table tr:last-child td { border-bottom: none; }
+.admin-table tr:hover td { background: var(--bg2); }
+
+.status-badge { padding: 2px 10px; border-radius: 99px; font-size: 0.73rem; font-weight: 700; }
+.status-badge.active   { background: rgba(34,197,94,0.12); color: #15803d; }
+.status-badge.inactive { background: rgba(220,38,38,0.1);  color: #b91c1c; }
+.status-badge.pending  { background: rgba(245,158,11,0.12); color: #b45309; }

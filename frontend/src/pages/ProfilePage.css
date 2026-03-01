@@ -1,0 +1,69 @@
+﻿/* pages/ProfilePage.css */
+.profile-page { display: flex; flex-direction: column; gap: 1.4rem; max-width: 700px; }
+
+.profile-header-card {
+  background: linear-gradient(135deg, #0f2418 0%, #1d6f42 55%, #25874f 100%);
+  border-radius: var(--radius-xl, 22px);
+  padding: 2rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: 0 8px 32px rgba(29,111,66,0.3);
+  position: relative;
+  overflow: hidden;
+}
+.profile-header-card::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+}
+.profile-avatar {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  border: 3px solid rgba(255,255,255,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.profile-info .pname { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.4rem; font-weight: 800; margin: 0 0 0.2rem; letter-spacing: -0.03em; }
+.profile-info .prole { font-size: 0.85rem; opacity: 0.75; }
+.profile-info .pjoin { font-size: 0.75rem; opacity: 0.5; margin-top: 0.2rem; }
+
+.profile-section {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-xl, 22px);
+  padding: 1.5rem;
+}
+.profile-section h3 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 1.1rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 2px solid var(--primary-glow);
+  color: var(--primary);
+}
+
+.profile-form { display: flex; flex-direction: column; gap: 0.9rem; }
+.profile-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+@media (max-width: 560px) { .profile-row { grid-template-columns: 1fr; } }
+
+.profile-actions { display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; }
+
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.75rem; }
+.stat-box {
+  background: var(--bg2);
+  border-radius: var(--radius-lg, 18px);
+  padding: 1rem;
+  text-align: center;
+  transition: box-shadow 0.2s;
+}
+.stat-box:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.stat-box .sb-val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.6rem; font-weight: 800; color: var(--primary); }
+.stat-box .sb-label { font-size: 0.72rem; opacity: 0.6; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 0.2rem; }

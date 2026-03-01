@@ -1,0 +1,73 @@
+﻿/* pages/DiseasePage.css */
+.disease-page { display: flex; flex-direction: column; gap: 1.4rem; }
+
+.upload-zone {
+  border: 2px dashed rgba(29,111,66,0.3);
+  border-radius: var(--radius-xl, 22px);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  background: var(--bg2, #e8f4ed);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.upload-zone:hover, .upload-zone.drag-over {
+  border-color: var(--primary);
+  background: rgba(29,111,66,0.07);
+}
+.upload-icon { font-size: 3rem; margin-bottom: 0.75rem; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.1)); }
+.upload-zone h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.1rem; font-weight: 700; margin: 0 0 0.35rem; }
+.upload-zone p { font-size: 0.85rem; opacity: 0.6; margin: 0 0 1rem; }
+
+.disease-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
+@media (max-width: 768px) { .disease-layout { grid-template-columns: 1fr; } }
+
+.image-preview-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-xl, 22px);
+  overflow: hidden;
+}
+.image-preview-card img { width: 100%; height: 240px; object-fit: cover; display: block; }
+.image-actions { padding: 1rem; display: flex; gap: 0.6rem; }
+
+.disease-result-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-xl, 22px);
+  padding: 1.5rem;
+}
+.disease-result-card h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 700; margin: 0 0 1rem; color: var(--primary); }
+
+.result-banner {
+  border-radius: var(--radius-lg, 18px);
+  padding: 1.2rem 1.4rem;
+  margin-bottom: 1rem;
+}
+.result-banner.healthy { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); }
+.result-banner.diseased { background: rgba(220,38,38,0.07); border: 1px solid rgba(220,38,38,0.15); }
+.result-banner .disease-name { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.3rem; font-weight: 800; letter-spacing: -0.03em; }
+.result-banner .confidence {
+  font-size: 0.8rem; opacity: 0.65; font-weight: 600;
+  margin-top: 0.3rem; text-transform: uppercase; letter-spacing: 0.04em;
+}
+
+.treatment-section { margin-top: 0.75rem; }
+.treatment-section h4 { font-size: 0.85rem; font-weight: 700; opacity: 0.65; margin-bottom: 0.5rem; }
+.treatment-section ul { margin: 0; padding-left: 1.3rem; }
+.treatment-section li { font-size: 0.87rem; opacity: 0.8; margin-bottom: 0.3rem; line-height: 1.5; }
+
+.disease-history { display: flex; flex-direction: column; gap: 0.65rem; }
+.history-item {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg, 18px);
+  padding: 0.9rem 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: box-shadow 0.2s;
+}
+.history-item:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.history-item img { width: 56px; height: 56px; object-fit: cover; border-radius: 10px; flex-shrink: 0; }
+.history-meta .h-name { font-weight: 700; font-size: 0.9rem; }
+.history-meta .h-date { font-size: 0.75rem; opacity: 0.55; margin-top: 2px; }
