@@ -1,67 +1,191 @@
-﻿/* pages/MarketPage.css */
-.market-page { display: flex; flex-direction: column; gap: 1.4rem; }
+﻿/* ============================================================
+   MarketPage.css
+   ============================================================ */
 
-.market-filters { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-.market-filters select, .market-filters input { min-width: 160px; flex: 1; }
+.market-wrapper { display: flex; flex-direction: column; gap: 1.4rem; }
 
-.mandi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
-.mandi-card {
+/* ── Header row ── */
+.market-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.market-search-wrap { flex: 1; max-width: 340px; }
+.market-search-input {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  border: 1.5px solid var(--card-border, rgba(0,0,0,0.1));
+  font-size: 0.93rem;
+  background: var(--card-bg, #fff);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.market-search-input:focus { border-color: var(--primary, #1d6f42); }
+
+/* ── Stats strip ── */
+.market-stats-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.85rem;
+}
+@media (max-width: 600px) { .market-stats-strip { grid-template-columns: repeat(2, 1fr); } }
+.mss-item {
   background: var(--card-bg, #fff);
   border: 1px solid var(--card-border, rgba(0,0,0,0.07));
-  border-radius: var(--radius-xl, 22px);
-  padding: 1.3rem 1.4rem;
-  transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s;
+  border-radius: 16px;
+  padding: 1rem 1.1rem;
+  text-align: center;
+}
+.mss-val {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--primary, #1d6f42);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.mss-label { font-size: 0.7rem; font-weight: 600; opacity: 0.5; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.2rem; }
+
+/* ── Crop Cards Grid ── */
+.crop-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+.market-empty-state {
+  grid-column: 1/-1;
+  text-align: center;
+  padding: 2.5rem;
+  opacity: 0.45;
+  font-size: 0.95rem;
+}
+.crop-price-card {
+  cursor: pointer;
+  padding: 1.2rem 1.1rem;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  border: 2px solid transparent;
   position: relative;
   overflow: hidden;
 }
-.mandi-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--primary), var(--primary-light, #25874f));
+.crop-price-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+.crop-card-active {
+  border-color: var(--primary, #1d6f42);
+  box-shadow: 0 0 0 3px rgba(29,111,66,0.12);
 }
-.mandi-card:hover { box-shadow: 0 8px 28px rgba(29,111,66,0.13); transform: translateY(-3px); border-color: rgba(29,111,66,0.18); }
 
-.mandi-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.9rem; }
-.mandi-name { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 1.05rem; letter-spacing: -0.02em; }
-.mandi-state { font-size: 0.75rem; opacity: 0.55; margin-top: 2px; }
-.mandi-badge {
-  background: var(--primary-glow, rgba(29,111,66,0.12));
-  color: var(--primary);
-  border-radius: 99px;
-  padding: 3px 10px;
-  font-size: 0.7rem;
+.cpc-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; }
+.cpc-emoji { font-size: 2rem; line-height: 1; }
+
+.cpc-trend-badge {
+  font-size: 0.68rem;
   font-weight: 700;
-  white-space: nowrap;
+  padding: 0.2rem 0.55rem;
+  border-radius: 20px;
+  letter-spacing: 0.03em;
 }
+.trend-up   { background: #dcfce7; color: #16a34a; }
+.trend-down { background: #fee2e2; color: #dc2626; }
+.trend-stable { background: #f1f5f9; color: #64748b; }
 
+.cpc-name { font-size: 1rem; font-weight: 800; margin-bottom: 0.3rem; font-family: 'Plus Jakarta Sans', sans-serif; }
+.cpc-price {
+  font-size: 1.7rem;
+  font-weight: 900;
+  color: var(--primary, #1d6f42);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  line-height: 1;
+}
+.cpc-sub { font-size: 0.7rem; opacity: 0.45; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.1rem; }
+.cpc-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-size: 0.72rem;
+  opacity: 0.5;
+  margin-top: 0.6rem;
+}
+.cpc-chart-hint {
+  margin-top: 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--primary, #1d6f42);
+  opacity: 0.7;
+  text-align: center;
+  border-top: 1px solid var(--card-border, rgba(0,0,0,0.07));
+  padding-top: 0.5rem;
+}
+.crop-card-active .cpc-chart-hint { opacity: 1; }
+
+/* ── Trend Chart ── */
+.market-chart-card { padding: 1.4rem 1.5rem; }
+.mcc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.mcc-title { font-size: 1.05rem; font-weight: 700; margin: 0; }
+.mcc-close {
+  background: none;
+  border: 1px solid var(--card-border, rgba(0,0,0,0.1));
+  border-radius: 50%;
+  width: 30px; height: 30px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: var(--text, #333);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+.mcc-close:hover { background: #fee2e2; border-color: #fca5a5; color: #dc2626; }
+.mcc-loading { text-align: center; padding: 2rem; opacity: 0.45; font-size: 0.9rem; }
+
+/* ── AI Prediction ── */
+.market-predict-card { padding: 1.5rem; }
+.mpc-header { margin-bottom: 1.2rem; }
+.mpc-title { font-size: 1.05rem; font-weight: 700; margin: 0 0 0.2rem; }
+.mpc-sub { font-size: 0.82rem; opacity: 0.5; margin: 0; }
+
+.mpc-body { display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: flex-start; }
+.mpc-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 0.75rem;
+  align-items: end;
+  flex: 1;
+  min-width: 280px;
+}
+@media (max-width: 700px) { .mpc-form { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .mpc-form { grid-template-columns: 1fr; } }
+.mpc-btn { white-space: nowrap; height: 42px; }
+
+/* Prediction result hero */
+.pred-result-hero {
+  background: linear-gradient(135deg, #1d6f42 0%, #25874f 100%);
+  color: #fff;
+  border-radius: 18px;
+  padding: 1.4rem 1.8rem;
+  text-align: center;
+  min-width: 200px;
+  flex-shrink: 0;
+  box-shadow: 0 6px 24px rgba(29,111,66,0.3);
+}
+.prh-emoji { font-size: 2.2rem; margin-bottom: 0.3rem; }
+.prh-label { font-size: 0.78rem; font-weight: 600; opacity: 0.8; margin-bottom: 0.2rem; }
+.prh-price {
+  font-size: 2.4rem;
+  font-weight: 900;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  line-height: 1;
+}
+.prh-unit { font-size: 0.8rem; opacity: 0.75; margin-top: 0.15rem; }
+.prh-meta { font-size: 0.72rem; opacity: 0.65; margin-top: 0.6rem; }
+
+/* keep old price-table for reference if needed */
 .price-table { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
 .price-table th {
-  background: var(--bg2, #e8f4ed);
-  color: var(--primary);
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 700;
-  padding: 7px 10px;
-  text-align: left;
+  background: var(--bg2, #e8f4ed); color: var(--primary);
+  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;
+  font-weight: 700; padding: 7px 10px; text-align: left;
 }
-.price-table th:first-child { border-radius: 8px 0 0 8px; }
-.price-table th:last-child  { border-radius: 0 8px 8px 0; }
 .price-table td { padding: 8px 10px; border-bottom: 1px solid var(--card-border, rgba(0,0,0,0.06)); }
-.price-table tr:last-child td { border-bottom: none; }
-.price-table tr:hover td { background: var(--bg2, #e8f4ed); }
-.price-high { color: var(--primary); font-weight: 700; }
-.price-low  { color: var(--danger, #dc2626); font-weight: 700; }
-
-.market-empty {
-  text-align: center;
-  padding: 3rem 2rem;
-  color: var(--text-muted, #64748b);
-  background: var(--card-bg);
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--card-border);
-}
-.market-empty .empty-icon { font-size: 3rem; margin-bottom: 0.75rem; }
-.market-empty p { font-size: 0.9rem; }

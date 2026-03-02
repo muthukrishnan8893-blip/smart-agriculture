@@ -52,16 +52,25 @@ def recommend():
     """
     data = request.get_json()
 
-    required = ['soil_type', 'crop_type', 'nitrogen', 'phosphorus', 'potassium']
-    for f in required:
-        if data.get(f) is None:
-            return jsonify({'error': f'{f} is required'}), 400
+    if not data.get('soil_type') or not data.get('crop_type'):
+        return jsonify({'error': 'soil_type and crop_type are required'}), 400
+
+    # Default NPK based on soil_health level if not explicitly provided
+    HEALTH_DEFAULTS = {
+        'poor':      (35,  12, 14),
+        'low':       (65,  22, 26),
+        'average':   (95,  38, 45),
+        'good':      (130, 55, 68),
+        'excellent': (170, 72, 90),
+    }
+    soil_health = (data.get('soil_health') or 'average').lower()
+    dn, dp, dk  = HEALTH_DEFAULTS.get(soil_health, HEALTH_DEFAULTS['average'])
 
     soil = data['soil_type'].strip()
     crop = data['crop_type'].strip()
-    n    = float(data['nitrogen'])
-    p    = float(data['phosphorus'])
-    k    = float(data['potassium'])
+    n    = float(data.get('nitrogen')   or dn)
+    p    = float(data.get('phosphorus') or dp)
+    k    = float(data.get('potassium')  or dk)
 
     # 1. Look up exact match in database
     rec = FertilizerRecommendation.query.filter_by(
@@ -79,6 +88,7 @@ def recommend():
         result = {
             'soil_type':              rec.soil_type,
             'crop_type':              rec.crop_type,
+            'soil_health':            soil_health,
             'recommended_fertilizer': rec.recommended_fertilizer,
             'quantity_per_acre':      rec.quantity_per_acre,
             'base_notes':             rec.notes,
@@ -89,6 +99,7 @@ def recommend():
         result = {
             'soil_type':              soil,
             'crop_type':              crop,
+            'soil_health':            soil_health,
             'recommended_fertilizer': 'NPK 10:26:26 or as per soil test report',
             'quantity_per_acre':      '50 kg/acre',
             'base_notes':             'No specific record found. Please consult a local agronomist.',

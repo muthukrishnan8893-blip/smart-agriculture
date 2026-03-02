@@ -33,6 +33,11 @@ export default function DiseasePage() {
   const handleFile = e => {
     const f = e.target.files[0];
     if (!f) return;
+    // Basic client-side type check
+    if (!f.type.startsWith('image/')) {
+      setError('Only image files are allowed.');
+      return;
+    }
     setFile(f);
     setPreview(URL.createObjectURL(f));
     setResult(null);
@@ -42,7 +47,12 @@ export default function DiseasePage() {
   const handleDrop = e => {
     e.preventDefault();
     const f = e.dataTransfer.files[0];
-    if (f) { setFile(f); setPreview(URL.createObjectURL(f)); setResult(null); }
+    if (!f) return;
+    if (!f.type.startsWith('image/')) { setError('Only image files are allowed.'); return; }
+    setFile(f);
+    setPreview(URL.createObjectURL(f));
+    setResult(null);
+    setError('');
   };
 
   const handleSubmit = async e => {
@@ -101,12 +111,24 @@ export default function DiseasePage() {
                   <div className="drop-placeholder">
                     <span>🌿</span>
                     <p>{T.dragDrop}</p>
-                    <small>{T.supportedFormats}</small>
+                    <small>Upload a clear photo of a <strong>crop leaf</strong> only · JPG / PNG</small>
                   </div>
                 )}
               </div>
               <input ref={inputRef} type="file" accept="image/*" onChange={handleFile} hidden />
-              {error && <div className="error-msg">{error}</div>}
+
+              {/* Leaf-only reminder badge */}
+              <div className="leaf-only-notice">
+                🍃 Only crop leaf images are accepted. Aadhaar cards, documents, or non-plant photos will be rejected.
+              </div>
+
+              {error && (
+                <div className={`error-msg ${error.toLowerCase().includes('leaf') || error.toLowerCase().includes('plant') ? 'error-leaf' : ''}`}>
+                  {error.toLowerCase().includes('leaf') || error.toLowerCase().includes('plant')
+                    ? '🚫 ' + error
+                    : error}
+                </div>
+              )}
               <button
                 className="btn btn-primary w-full"
                 onClick={handleSubmit}
@@ -196,22 +218,30 @@ export default function DiseasePage() {
           {!hLoading && history.length > 0 && (
             <div className="history-list">
               {history.map((item, i) => {
-                const healthy = item.disease_name?.includes('Healthy');
+                const diseaseName = (item.predicted_disease || item.disease_name || 'Unknown').replace(/_/g, ' ');
+                const healthy = diseaseName.toLowerCase().includes('healthy');
                 const conf = typeof item.confidence === 'number' ? item.confidence : 0;
+                const confColor = conf > 0.8 ? '#16a34a' : conf > 0.5 ? '#f57c00' : '#c62828';
                 return (
                   <div key={item.id || i} className="history-item">
-                    <div className="hi-left">
-                      <span className={`hi-dot ${healthy ? 'dot-green' : 'dot-orange'}`} />
-                      <div>
-                        <div className="hi-disease">{(item.disease_name || 'Unknown').replace(/_/g, ' ')}</div>
-                        <div className="hi-meta">{item.detected_at ? new Date(item.detected_at).toLocaleString('en-IN') : '—'}</div>
-                      </div>
+                    <div className="hi-badge-col">
+                      <span className={`hi-status-badge ${healthy ? 'hi-healthy' : 'hi-infected'}`}>
+                        {healthy ? '✅ Healthy' : '⚠️ Infected'}
+                      </span>
                     </div>
-                    <div className="hi-right">
+                    <div className="hi-main">
+                      <div className="hi-disease">{diseaseName}</div>
+                      {item.treatment && (
+                        <div className="hi-treatment">💊 {item.treatment}</div>
+                      )}
+                      <div className="hi-meta">🕒 {item.detected_at ? new Date(item.detected_at).toLocaleString('en-IN') : '—'}</div>
+                    </div>
+                    <div className="hi-conf-col">
+                      <div className="hi-conf-num" style={{color: confColor}}>{(conf*100).toFixed(0)}%</div>
+                      <div className="hi-conf-label">confidence</div>
                       <div className="hi-conf-bar-bg">
-                        <div className="hi-conf-bar-fill" style={{width:`${conf*100}%`, background: conf > 0.8 ? '#2e7d32' : conf > 0.5 ? '#f57c00' : '#c62828'}} />
+                        <div className="hi-conf-bar-fill" style={{width:`${conf*100}%`, background: confColor}} />
                       </div>
-                      <span className="hi-conf-num">{(conf*100).toFixed(0)}%</span>
                     </div>
                   </div>
                 );

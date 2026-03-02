@@ -48,3 +48,70 @@
 .fert-tips h4 { font-size: 0.88rem; font-weight: 700; opacity: 0.7; margin-bottom: 0.5rem; }
 .fert-tips ul { margin: 0; padding-left: 1.3rem; }
 .fert-tips li { font-size: 0.85rem; opacity: 0.75; margin-bottom: 0.3rem; line-height: 1.5; }
+
+/* NPK preview pill row under soil-health select */
+.npk-preview {
+  display: flex;
+  gap: 0.55rem;
+  margin-top: 0.55rem;
+  flex-wrap: wrap;
+}
+.npk-preview span {
+  background: var(--bg2, #e8f4ed);
+  border: 1px solid rgba(29,111,66,0.15);
+  border-radius: 20px;
+  padding: 0.22rem 0.75rem;
+  font-size: 0.78rem;
+  color: var(--primary, #1d6f42);
+  font-weight: 600;
+}
+.npk-preview span strong { color: var(--primary, #1d6f42); }
+
+/* Result rows */
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--card-border, rgba(0,0,0,0.06));
+  font-size: 0.92rem;
+}
+.result-row span { opacity: 0.55; }
+.result-highlight {
+  margin-top: 0.8rem;
+  background: var(--bg2, #e8f4ed);
+  border-radius: 14px;
+  padding: 0.85rem 1rem;
+}
+.rh-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.55; margin-bottom: 0.25rem; }
+.rh-value { font-size: 1.1rem; font-weight: 800; color: var(--primary, #1d6f42); }
+
+.result-notes {
+  margin-top: 0.8rem;
+  font-size: 0.87rem;
+  opacity: 0.75;
+  line-height: 1.5;
+}
+.result-npk {
+  margin-top: 0.8rem;
+  font-size: 0.87rem;
+}
+.result-npk ul { margin: 0.4rem 0 0; padding-left: 1.2rem; }
+.result-npk li { margin-bottom: 0.3rem; opacity: 0.8; }
+
+/* Soil health guide table */
+.shg-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--card-border, rgba(0,0,0,0.06));
+  font-size: 0.87rem;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+.shg-row:last-child { border-bottom: none; }
+.shg-label { font-weight: 600; }
+.shg-npk { font-size: 0.78rem; opacity: 0.55; font-family: monospace; }
+
+.fert-info h4 { margin: 0 0 0.8rem; font-size: 0.95rem; font-weight: 700; color: var(--primary, #1d6f42); }

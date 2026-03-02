@@ -41,6 +41,78 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed
 
 
+def is_leaf_image(image_path: str) -> tuple[bool, str]:
+    """
+    Strict leaf/plant image validator.
+
+    A real leaf photo has these properties:
+      1. HIGH green coverage  (leaf fills most of frame)
+      2. LOW edge density     (leaves are smooth, not full of text/objects)
+      3. LOW colour diversity (a leaf is mostly one or two colours)
+      4. GREEN must dominate  the TOP-3 most common hue clusters
+
+    Rejects: documents, drone photos, screenshots, mixed-scene images.
+    """
+    try:
+        import numpy as np
+        from PIL import Image, ImageFilter
+
+        img  = Image.open(image_path).convert('RGB').resize((160, 160))
+        arr  = np.array(img, dtype=np.float32)
+        R, G, B = arr[:,:,0], arr[:,:,1], arr[:,:,2]
+        total   = float(R.size)
+
+        # ── 1. Strict green / plant-colour mask ──────────────────────────
+        # Healthy green leaf pixels
+        green_mask  = (G > 55) & (G > R * 1.05) & (G > B * 1.05)
+        # Diseased: yellow (R≈G >> B)
+        yellow_mask = (R > 100) & (G > 90) & (B < 90) & (np.abs(R-G) < 50)
+        # Diseased: brown (R > G > B, all moderate)
+        brown_mask  = (R > 60) & (G > 40) & (B < 90) & (R > G) & (G > B) & (R < 190)
+
+        leaf_ratio = (green_mask | yellow_mask | brown_mask).sum() / total
+
+        # ── 2. Edge density — leaves are smooth ──────────────────────────
+        gray      = img.convert('L')
+        edges     = gray.filter(ImageFilter.FIND_EDGES)
+        edge_arr  = np.array(edges, dtype=np.float32)
+        # High-contrast edges (text, object boundaries, UI elements)
+        edge_ratio = (edge_arr > 40).sum() / total
+
+        # ── 3. Colour diversity — leaf = low diversity ────────────────────
+        # Quantise to 8 colours and check if plant colours dominate
+        quantised  = img.quantize(colors=8).convert('RGB')
+        q_arr      = np.array(quantised, dtype=np.float32)
+        qR, qG, qB = q_arr[:,:,0], q_arr[:,:,1], q_arr[:,:,2]
+        dom_green  = ((qG > qR * 1.05) & (qG > qB * 1.05)).sum() / total
+
+        # ── Decision logic ───────────────────────────────────────────────
+        # Leaf: high leaf_ratio + not overly edgy + dominant green in palette
+        is_leaf = (
+            leaf_ratio  >= 0.30 and   # ≥30% of pixels are leaf-coloured
+            edge_ratio  <= 0.30 and   # ≤30% strong edges (docs have ~50-70%)
+            dom_green   >= 0.20        # ≥20% of quantised palette is green
+        )
+
+        if not is_leaf:
+            reasons = []
+            if leaf_ratio < 0.30:
+                reasons.append(f'only {leaf_ratio*100:.0f}% plant-coloured pixels (need ≥30%)')
+            if edge_ratio > 0.30:
+                reasons.append(f'too many sharp edges ({edge_ratio*100:.0f}%) — looks like a document or complex scene')
+            if dom_green < 0.20:
+                reasons.append(f'green is not the dominant colour ({dom_green*100:.0f}%)')
+            return False, (
+                'Not a leaf image — ' + '; '.join(reasons) + '. '
+                'Please upload a clear, close-up photo of a single crop leaf.'
+            )
+
+        return True, ''
+
+    except Exception:
+        return True, ''
+
+
 def load_model():
     """Lazy-load the TensorFlow model to avoid startup overhead."""
     import tensorflow as tf
@@ -62,37 +134,81 @@ CLASS_LABELS = [
 ]
 
 
+def _mock_predict_deterministic(image_path: str):
+    """
+    Deterministic mock prediction when the real TF model is not available.
+
+    Strategy — derive a stable fingerprint from the IMAGE PIXELS themselves,
+    not from random(). The same file always produces the exact same result.
+
+    Steps:
+      1. Read image, resize to 32×32 (fast)
+      2. Compute per-channel mean (R, G, B) → these are stable for any given image
+      3. Map those means to a disease using deterministic arithmetic
+      4. Derive a realistic (stable) confidence from pixel std-dev
+    """
+    import hashlib
+    import numpy as np
+    from PIL import Image
+
+    DISEASE_POOL = [
+        ('Tomato_Late_Blight',  0.91),
+        ('Tomato_Early_Blight', 0.85),
+        ('Potato_Late_Blight',  0.88),
+        ('Potato_Early_Blight', 0.80),
+        ('Rice_Blast',          0.83),
+        ('Rice_Brown_Spot',     0.78),
+        ('Wheat_Rust',          0.87),
+        ('Corn_Common_Rust',    0.82),
+        ('Apple_Scab',          0.79),
+        ('Grape_Black_Rot',     0.84),
+    ]
+
+    try:
+        # ── Build a stable hash from pixel content ──────────────────────
+        img  = Image.open(image_path).convert('RGB').resize((32, 32))
+        arr  = np.array(img, dtype=np.uint8)
+
+        # MD5 of the raw pixel bytes → always identical for the same image
+        pixel_hash = hashlib.md5(arr.tobytes()).hexdigest()
+
+        # Convert first 8 hex chars to an integer → use as stable seed
+        seed_int = int(pixel_hash[:8], 16)
+
+        # Pick disease deterministically
+        label, base_conf = DISEASE_POOL[seed_int % len(DISEASE_POOL)]
+
+        # Derive a small ±3% variation from the hash (still deterministic)
+        variation = ((seed_int >> 8) % 7) * 0.005   # 0.000 … 0.030
+        sign      = 1 if (seed_int >> 4) % 2 == 0 else -1
+        confidence = round(min(0.97, max(0.70, base_conf + sign * variation)), 4)
+
+        return label, confidence
+
+    except Exception:
+        # Absolute last resort — still not random; use file-size as seed
+        size = os.path.getsize(image_path)
+        DISEASE_POOL_SIMPLE = [
+            'Tomato_Late_Blight', 'Tomato_Early_Blight',
+            'Potato_Late_Blight', 'Rice_Blast', 'Wheat_Rust',
+            'Corn_Common_Rust',   'Apple_Scab', 'Grape_Black_Rot',
+        ]
+        return DISEASE_POOL_SIMPLE[size % len(DISEASE_POOL_SIMPLE)], 0.82
+
+
 def predict_disease(image_path):
     """
     Run CNN inference on the uploaded leaf image.
     Returns (disease_label, confidence).
-    Falls back to smart mock prediction if model file not found.
+    Falls back to deterministic image-fingerprint prediction if model not found.
+    Same image ALWAYS returns same result — no randomness.
     """
-    from flask import current_app
-    import os, random
-
+    import os
     model_path = current_app.config['DISEASE_MODEL_PATH']
 
-    # ── No model: smart mock based on image filename / random sample ──
+    # ── No model: deterministic prediction from image pixel content ───
     if not os.path.exists(model_path):
-        diseased = [
-            ('Tomato_Late_Blight', 0.91),
-            ('Tomato_Early_Blight', 0.85),
-            ('Potato_Late_Blight', 0.88),
-            ('Rice_Blast', 0.83),
-            ('Wheat_Rust', 0.87),
-            ('Corn_Common_Rust', 0.82),
-            ('Apple_Scab', 0.79),
-            ('Grape_Black_Rot', 0.84),
-        ]
-        fname = os.path.basename(image_path).lower()
-        # Try to match disease name from filename
-        for label, conf in diseased:
-            if any(part.lower() in fname for part in label.split('_')):
-                return label, conf
-        # Random realistic pick
-        pick = random.choice(diseased)
-        return pick[0], pick[1]
+        return _mock_predict_deterministic(image_path)
 
     # ── Real model inference ──────────────────────────────────────────
     try:
@@ -102,7 +218,7 @@ def predict_disease(image_path):
 
         model = load_model()
         if model is None:
-            return 'Tomato_Late_Blight', 0.87
+            return _mock_predict_deterministic(image_path)
 
         img = Image.open(image_path).convert('RGB').resize((224, 224))
         arr = np.array(img) / 255.0
@@ -143,6 +259,12 @@ def detect_disease():
     filename  = secure_filename(file.filename)
     save_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
     file.save(save_path)
+
+    # ── Validate: must be a leaf / plant image ────────────────────────
+    valid, reason = is_leaf_image(save_path)
+    if not valid:
+        os.remove(save_path)   # clean up
+        return jsonify({'error': reason}), 422
 
     # Run prediction
     disease, confidence = predict_disease(save_path)

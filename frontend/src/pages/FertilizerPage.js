@@ -5,12 +5,21 @@ import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations';
 import './FertilizerPage.css';
 
+// Maps friendly soil-health level → typical NPK kg/acre
+const SOIL_HEALTH_NPK = {
+  poor:      { nitrogen: 35,  phosphorus: 12, potassium: 14, label: '😟 Poor   – Very low nutrients' },
+  low:       { nitrogen: 65,  phosphorus: 22, potassium: 26, label: '😐 Below Average – Needs improvement' },
+  average:   { nitrogen: 95,  phosphorus: 38, potassium: 45, label: '🙂 Average – Moderate nutrients' },
+  good:      { nitrogen: 130, phosphorus: 55, potassium: 68, label: '😊 Good   – Healthy soil' },
+  excellent: { nitrogen: 170, phosphorus: 72, potassium: 90, label: '🌟 Excellent – Rich, fertile soil' },
+};
+
 export default function FertilizerPage() {
   const { lang } = useLanguage();
   const T = translations[lang]?.fertilizer || translations.en.fertilizer;
   const [soilTypes, setSoilTypes]   = useState([]);
   const [cropTypes, setCropTypes]   = useState([]);
-  const [form, setForm]             = useState({ soil_type:'', crop_type:'', nitrogen:'', phosphorus:'', potassium:'' });
+  const [form, setForm]             = useState({ soil_type:'', crop_type:'', soil_health:'average' });
   const [result, setResult]         = useState(null);
   const [loading, setLoading]       = useState(false);
   const [error, setError]           = useState('');
@@ -28,12 +37,14 @@ export default function FertilizerPage() {
     setResult(null);
     setLoading(true);
     try {
+      const npk = SOIL_HEALTH_NPK[form.soil_health] || SOIL_HEALTH_NPK.average;
       const res = await api.post('/fertilizer/recommend', {
-        soil_type: form.soil_type,
-        crop_type: form.crop_type,
-        nitrogen:  parseFloat(form.nitrogen),
-        phosphorus:parseFloat(form.phosphorus),
-        potassium: parseFloat(form.potassium)
+        soil_type:  form.soil_type,
+        crop_type:  form.crop_type,
+        soil_health: form.soil_health,
+        nitrogen:   npk.nitrogen,
+        phosphorus: npk.phosphorus,
+        potassium:  npk.potassium
       });
       setResult(res.data.recommendation);
     } catch (err) {
@@ -70,22 +81,20 @@ export default function FertilizerPage() {
               </select>
             </div>
 
-            <div className="npk-grid">
-              <div className="form-group">
-                <label>{T.nitrogen}</label>
-                <input type="number" name="nitrogen" value={form.nitrogen}
-                  onChange={handleChange} min="0" placeholder="e.g. 80" required />
-              </div>
-              <div className="form-group">
-                <label>{T.phosphorus}</label>
-                <input type="number" name="phosphorus" value={form.phosphorus}
-                  onChange={handleChange} min="0" placeholder="e.g. 30" required />
-              </div>
-              <div className="form-group">
-                <label>{T.potassium}</label>
-                <input type="number" name="potassium" value={form.potassium}
-                  onChange={handleChange} min="0" placeholder="e.g. 25" required />
-              </div>
+            <div className="form-group">
+              <label>🌱 Current Soil Health</label>
+              <select name="soil_health" value={form.soil_health} onChange={handleChange} required>
+                {Object.entries(SOIL_HEALTH_NPK).map(([key, val]) => (
+                  <option key={key} value={key}>{val.label}</option>
+                ))}
+              </select>
+              {form.soil_health && (
+                <div className="npk-preview">
+                  <span>N <strong>{SOIL_HEALTH_NPK[form.soil_health].nitrogen}</strong> kg/ac</span>
+                  <span>P <strong>{SOIL_HEALTH_NPK[form.soil_health].phosphorus}</strong> kg/ac</span>
+                  <span>K <strong>{SOIL_HEALTH_NPK[form.soil_health].potassium}</strong> kg/ac</span>
+                </div>
+              )}
             </div>
 
             <button type="submit" className="btn btn-primary w-full" disabled={loading}>
@@ -103,6 +112,10 @@ export default function FertilizerPage() {
             </div>
             <div className="result-row">
               <span>Crop</span><strong>{result.crop_type}</strong>
+            </div>
+            <div className="result-row">
+              <span>Soil Health</span>
+              <strong style={{textTransform:'capitalize'}}>{result.soil_health || form.soil_health}</strong>
             </div>
             <div className="result-highlight">
               <div className="rh-label">{T.recommended}</div>
@@ -131,11 +144,14 @@ export default function FertilizerPage() {
 
       {/* Info */}
       <div className="card fert-info">
-        <h4>ℹ️ NPK Guidelines</h4>
+        <h4>ℹ️ Soil Health Guide</h4>
         <div className="npk-guide">
-          <div><strong>Nitrogen (N):</strong> Promotes leafy green growth. Adequate level: 100–150 kg/acre.</div>
-          <div><strong>Phosphorus (P):</strong> Supports root development. Adequate level: 30–60 kg/acre.</div>
-          <div><strong>Potassium (K):</strong> Improves fruit quality & disease resistance. Adequate level: 40–80 kg/acre.</div>
+          {Object.entries(SOIL_HEALTH_NPK).map(([key, val]) => (
+            <div key={key} className="shg-row">
+              <span className="shg-label">{val.label}</span>
+              <span className="shg-npk">N:{val.nitrogen} · P:{val.phosphorus} · K:{val.potassium} kg/acre</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>
